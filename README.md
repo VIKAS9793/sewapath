@@ -2,6 +2,14 @@
 
 SewaPath is a calm, multilingual guide that helps Maharashtra residents understand a public-service route before they open the official portal.
 
+## Live public portal
+
+**[Open SewaPath on Cloudflare Pages](https://sewapath.pages.dev)**
+
+The live site is an independent citizen guide, not a Government of Maharashtra
+portal. Verify current service instructions on the official Aaple Sarkar site
+before submitting information or payment.
+
 The first pilot focuses on the Maharashtra income certificate journey in Marathi, Hindi, and English. It turns an uncertain first step into a small checklist, an official Aaple Sarkar handoff, and a safer way to signal where digital service steps feel confusing.
 
 > SewaPath is an independent navigation aid. It is not a government portal, does not decide eligibility, and does not guarantee approval.
