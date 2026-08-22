@@ -1,0 +1,11 @@
+{
+  "name": "SewaPath — Public service navigator",
+  "short_name": "SewaPath",
+  "description": "A language-friendly guide to the Maharashtra income certificate route.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#fffaf0",
+  "lang": "mr-IN",
+  "icons": []
+}

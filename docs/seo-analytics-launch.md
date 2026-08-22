@@ -1,0 +1,93 @@
+# SewaPath search and measurement launch plan
+
+**Status:** Implemented as a launch-ready baseline; production verification is still required.
+**Audience:** Maharashtra citizens searching for income-certificate help in Marathi, Hindi, or English.
+**Positioning:** SewaPath is an independent navigation aid. It is not the government portal and does not decide eligibility.
+
+## Search intent strategy
+
+The first page deliberately owns one narrow, high-intent problem instead of making a generic “all government services” claim:
+
+- Primary intent: `Maharashtra income certificate online`
+- Marathi intent: `उत्पन्न प्रमाणपत्र महाराष्ट्र ऑनलाइन`
+- Hindi intent: `महाराष्ट्र आय प्रमाण पत्र ऑनलाइन`
+- Support intent: `income certificate documents Maharashtra`, `Aaple Sarkar income certificate`
+
+The page should answer the searcher’s next decision in under one screen: what route is this, what should I prepare, and where is the official service list? The copy must never imply that SewaPath is an official department, guarantees approval, or replaces the Aaple Sarkar process.
+
+## Implemented technical SEO
+
+- Descriptive title, meta description, robots directives, Open Graph, Twitter card, and theme metadata.
+- `WebApplication` JSON-LD with free access, supported languages, and independent-product disclosure.
+- Crawlable `noscript` fallback with useful service language and the official portal link.
+- Root `robots.txt` and `sitemap.xml`; the build rewrites them to absolute URLs.
+- Build-time `SEWAPATH_SITE_URL` support so the canonical URL, social image URL, sitemap, and robots sitemap directive follow the real Cloudflare Pages/custom domain.
+- No fake review, FAQ, government, or eligibility structured data. Add only when the page genuinely contains that content.
+- No language `hreflang` tags yet because Marathi, Hindi, and English are currently one client-side screen, not separate crawlable URLs.
+
+Run a production build with the real origin:
+
+```powershell
+$env:SEWAPATH_SITE_URL = "https://your-final-domain.example"
+npm.cmd run build
+```
+
+## Measurement contract
+
+The UI emits only allowlisted, aggregate events through `src/analytics.ts` when a consented `gtag` or Bing `uetq` integration exists:
+
+| Event | Parameters | Decision supported |
+| --- | --- | --- |
+| `language_selected` | `language` | Which language entry point needs improvement |
+| `voice_demo_started` | `language` | Whether voice-first discovery is used |
+| `typed_entry_opened` | `language` | Whether typing remains the preferred fallback |
+| `service_request_submitted` | `language`, `input_method`, `service` | Completion of first-step intake |
+| `official_portal_clicked` | `service` | Handoff intent to the official route |
+| `friction_prompt_opened` | `language` | Demand for anonymous friction reporting |
+
+Never add request text, names, phone numbers, addresses, document names, exact locations, or accusations to analytics parameters. Analytics is disabled unless the host page supplies a configured integration; add a consent control before enabling production measurement.
+
+## Google Analytics 4 setup
+
+1. Create or select the GA4 web data stream for the final domain.
+2. Add the Google tag only after the product has a privacy/consent decision. Keep measurement IDs in Cloudflare Pages environment variables or a secret-managed deployment step, never in research data or citizen-submitted payloads.
+3. Mark `official_portal_clicked` and `service_request_submitted` as conversions only after baseline data is available.
+4. In DebugView, verify event names and confirm that no free text is sent.
+5. Build an exploration by `language`, `input_method`, and device—not by identity.
+
+## Search Console setup
+
+1. Verify the final domain property.
+2. Submit `/sitemap.xml`.
+3. Inspect `/` and request indexing after the first production deploy.
+4. Review Page indexing, Core Web Vitals, and Search performance weekly for the first month.
+5. Segment queries by Marathi/Hindi/English intent and compare clicks to `official_portal_clicked` rather than treating raw traffic as success.
+
+## Bing Webmaster Tools setup
+
+1. Verify the same final domain.
+2. Submit `/sitemap.xml` and run URL inspection.
+3. Check crawl/index coverage and SEO reports after the first crawl cycle.
+4. Use IndexNow only when a real public URL changes; do not submit private or user-specific routes.
+
+## Launch scorecard
+
+Primary outcome: `official_portal_clicked / unique landing sessions`.
+
+Guardrails:
+
+- No document uploads.
+- No personal identifiers in analytics or feedback payloads.
+- No public insight shown below the minimum aggregation threshold defined in `MVP_SPEC.md`.
+- At least one successful official-portal handoff in each supported language before promoting the pilot.
+- Monitor Search Console/Bing impressions and queries, but do not optimize for clicks if the result causes citizens to misunderstand SewaPath’s independent role.
+
+## Source guidance
+
+- [Google Search Central: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
+- [Google Search Central: title links](https://developers.google.com/search/docs/appearance/title-link)
+- [Google Analytics: set up events](https://developers.google.com/analytics/devguides/collection/ga4/events)
+- [Google Search Central: build and submit a sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)
+- [Bing Webmaster Tools: webmaster guidelines](https://www.bing.com/webmasters/help/bing-webmaster-guidelines-30fba23a)
+- [Bing Webmaster Tools: sitemaps](https://www.bing.com/webmasters/help/sitemaps-3b5cf6ed)
+- [Cloudflare Pages: custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/)

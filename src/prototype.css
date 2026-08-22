@@ -1,0 +1,365 @@
+/* App-owned visual language for the approved SewaPath mobile flow. */
+
+:root {
+  --sewa-cream: #fffaf0;
+  --sewa-paper: #fffdf8;
+  --sewa-ink: #1d2f55;
+  --sewa-muted: #6d7584;
+  --sewa-clay: #c8654c;
+  --sewa-saffron: #f0a43a;
+  --sewa-teal: #3c8b85;
+  --sewa-line: #eadfce;
+}
+
+.app-screen {
+  background: var(--sewa-cream);
+  color: var(--sewa-ink);
+}
+
+.sewapath-screen {
+  min-height: 100%;
+  padding: 19px 21px calc(var(--mobile-safe-area-height) + 28px);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 36px;
+}
+
+.brand-crop {
+  position: relative;
+  width: 124px;
+  height: 34px;
+  overflow: hidden;
+  flex: 0 0 124px;
+}
+
+.brand-crop img {
+  position: absolute;
+  width: 220px;
+  max-width: none;
+  transform: translate(-39px, -52px);
+}
+
+.language-switcher {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #e6dccb;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.72);
+}
+
+.language-option {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 8px;
+  background: transparent;
+  color: var(--sewa-muted);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.language-option.active {
+  background: var(--sewa-ink);
+  color: #fffdf8;
+  box-shadow: 0 2px 6px rgba(29, 47, 85, 0.14);
+}
+
+.listen-panel,
+.route-panel {
+  display: flex;
+  flex-direction: column;
+  padding-top: 26px;
+}
+
+.eyebrow {
+  color: var(--sewa-clay);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+h1 {
+  max-width: 320px;
+  margin: 10px 0 10px;
+  color: var(--sewa-ink);
+  font-size: 28px;
+  font-weight: 760;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+}
+
+.intro-copy {
+  max-width: 315px;
+  margin: 0;
+  color: var(--sewa-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.journey-illustration {
+  display: block;
+  width: calc(100% + 18px);
+  max-width: none;
+  height: 178px;
+  margin: 17px -9px 13px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 22px;
+}
+
+.voice-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 14px 14px 16px;
+  border: 1px solid #f0dfc8;
+  border-radius: 18px;
+  background: var(--sewa-paper);
+  box-shadow: 0 8px 22px rgba(102, 78, 45, 0.08);
+}
+
+.voice-card-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.voice-label {
+  color: var(--sewa-clay);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.voice-card strong {
+  overflow: hidden;
+  color: var(--sewa-ink);
+  font-size: 14px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-card small {
+  color: var(--sewa-muted);
+  font-size: 11px;
+}
+
+.voice-button {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sewa-clay);
+  color: white;
+  box-shadow: 0 8px 14px rgba(200, 101, 76, 0.24);
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.voice-button:active,
+.voice-button.listening {
+  background: var(--sewa-teal);
+  transform: scale(0.96);
+}
+
+.voice-button span {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.text-entry-trigger,
+.friction-link,
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--sewa-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.text-entry-trigger {
+  align-self: center;
+  margin: 15px 0 5px;
+  padding: 6px 10px;
+}
+
+.typed-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: #f5ecdf;
+}
+
+.typed-entry label {
+  color: var(--sewa-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.typed-entry-row {
+  display: flex;
+  gap: 7px;
+}
+
+.typed-entry input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #ddcdb8;
+  border-radius: 10px;
+  padding: 11px;
+  background: var(--sewa-paper);
+  color: var(--sewa-ink);
+  outline: none;
+  font-size: 13px;
+}
+
+.typed-entry input:focus {
+  border-color: var(--sewa-teal);
+  box-shadow: 0 0 0 3px rgba(60, 139, 133, 0.14);
+}
+
+.submit-button {
+  display: grid;
+  width: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: var(--sewa-ink);
+  color: white;
+}
+
+.privacy-note,
+.route-safety-note {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  margin: 18px 8px 0;
+  color: var(--sewa-muted);
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.privacy-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: var(--sewa-teal);
+}
+
+.route-panel {
+  padding-top: 17px;
+}
+
+.back-button {
+  align-self: flex-start;
+  margin-bottom: 30px;
+  padding: 0;
+  color: var(--sewa-muted);
+  font-size: 12px;
+}
+
+.understood-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 16px;
+  border-left: 4px solid var(--sewa-saffron);
+  border-radius: 0 16px 16px 0;
+  background: #fff2d9;
+}
+
+.understood-card span {
+  color: var(--sewa-muted);
+  font-size: 11px;
+}
+
+.understood-card strong {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin: 24px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--sewa-ink);
+  font-size: 14px;
+}
+
+.step-number {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e5f1ed;
+  color: var(--sewa-teal);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.official-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 15px 16px;
+  border-radius: 14px;
+  background: var(--sewa-ink);
+  color: #fffdf8;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.friction-link {
+  align-self: center;
+  margin-top: 16px;
+  padding: 6px 10px;
+  color: var(--sewa-clay);
+}
+
+.route-safety-note {
+  margin-top: 31px;
+  border-top: 1px solid var(--sewa-line);
+  padding-top: 17px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(60, 139, 133, 0.42);
+  outline-offset: 3px;
+}

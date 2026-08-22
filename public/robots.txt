@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Submit https://YOUR-PAGES-DOMAIN/sitemap.xml after the final domain is chosen.
