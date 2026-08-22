@@ -13,6 +13,10 @@
     "prebuild": "npm run check:runtime",
     "build": "tsc && vite build && node scripts/prepare-seo.mjs && node scripts/prepare-sites-build.mjs"
   },
+  "overrides": {
+    "postcss": "8.5.23",
+    "nanoid": "3.3.18"
+  },
   "dependencies": {
     "@fontsource/roboto": "5.2.10",
     "@radix-ui/react-dialog": "1.1.19",
