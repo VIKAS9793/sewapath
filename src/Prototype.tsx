@@ -20,7 +20,10 @@ import {
 } from "./analytics";
 
 type Language = "mr" | "hi" | "en";
-type Screen = "listen" | "route";
+type Screen = "listen" | "route" | "next" | "friction";
+
+const OFFICIAL_SERVICE_DIRECTORY_URL =
+  "https://aaplesarkar.mahaonline.gov.in/en/CommonForm/CitizenServices_RTS";
 
 const languageLabels: Record<Language, string> = {
   mr: "मराठी",
@@ -82,6 +85,24 @@ const copy = {
   },
 } as const;
 
+const officialCheckCopy: Record<Language, { title: string; body: string; link: string }> = {
+  mr: {
+    title: "अंतिम माहिती अधिकृत पोर्टलवरच तपासा",
+    body: "ही यादी फक्त तयारीसाठी आहे. अंतिम कागदपत्रे, शुल्क, पात्रता आणि वेळमर्यादा आपले सरकारच्या अधिकृत सेवायादीवरच तपासा.",
+    link: "अधिकृत सेवायादी तपासा",
+  },
+  hi: {
+    title: "अंतिम जानकारी केवल आधिकारिक पोर्टल पर जाँचें",
+    body: "यह सूची केवल तैयारी के लिए है। अंतिम दस्तावेज़, शुल्क, पात्रता और समय-सीमा आपले सरकार की आधिकारिक सेवा सूची पर ही जाँचें।",
+    link: "आधिकारिक सेवा सूची जाँचें",
+  },
+  en: {
+    title: "Verify the final answer on the official portal",
+    body: "This is a preparation aid, not an eligibility or document decision. Check the current documents, fees, eligibility, timeline, and form on the official Maharashtra service list before acting.",
+    link: "Verify official service instructions",
+  },
+};
+
 const analyticsCopy: Record<Language, { prompt: string; detail: string; allow: string; deny: string }> = {
   mr: {
     prompt: "SewaPath सुधारण्यासाठी अनामिक वापराची माहिती शेअर करायची का?",
@@ -103,12 +124,76 @@ const analyticsCopy: Record<Language, { prompt: string; detail: string; allow: s
   },
 };
 
+const nextCopy: Record<Language, { title: string; body: string; checklist: string[]; official: string; restart: string }> = {
+  mr: {
+    title: "अधिकृत पोर्टलनंतर पुढे काय?",
+    body: "अर्ज केल्यानंतर ही माहिती जतन करा आणि स्थिती फक्त अधिकृत मार्गावर तपासा.",
+    checklist: ["अर्ज किंवा पोचपावती क्रमांक जतन करा", "अधिकृत पोर्टलवर अर्जाची स्थिती तपासा", "मदत हवी असल्यास अधिकृत सेवा केंद्र वापरा"],
+    official: "अधिकृत पोर्टल पुन्हा उघडा",
+    restart: "पुन्हा सुरुवात करा",
+  },
+  hi: {
+    title: "आधिकारिक पोर्टल के बाद क्या करें?",
+    body: "आवेदन के बाद यह जानकारी सुरक्षित रखें और स्थिति केवल आधिकारिक मार्ग पर देखें।",
+    checklist: ["आवेदन या रसीद नंबर सुरक्षित रखें", "आधिकारिक पोर्टल पर आवेदन की स्थिति देखें", "मदद चाहिए तो अधिकृत सेवा केंद्र का उपयोग करें"],
+    official: "आधिकारिक पोर्टल फिर खोलें",
+    restart: "फिर से शुरू करें",
+  },
+  en: {
+    title: "What happens after the official portal?",
+    body: "Keep your acknowledgement details safe and check progress only through the official route.",
+    checklist: ["Save the application or acknowledgement number", "Track status on the official portal", "Use an authorised service centre if you need assisted help"],
+    official: "Open the official portal again",
+    restart: "Start again",
+  },
+};
+
+const frictionCopy: Record<Language, { title: string; body: string; back: string; submitted: string; options: Array<{ label: string; reason: string }> }> = {
+  mr: {
+    title: "कुठे अडचण आली?",
+    body: "तुमची ओळख किंवा अर्जाची माहिती न देता एक पर्याय निवडा.",
+    back: "मार्गाकडे परत जा",
+    submitted: "धन्यवाद. हा अनामिक संकेत नोंदवला गेला.",
+    options: [
+      { label: "सेवा सापडली नाही", reason: "service_not_found" },
+      { label: "कागदपत्रे स्पष्ट नव्हती", reason: "documents_unclear" },
+      { label: "लॉगिन किंवा OTP अडचण", reason: "login_or_otp" },
+      { label: "तांत्रिक अडचण", reason: "technical_issue" },
+    ],
+  },
+  hi: {
+    title: "कहां अटक गए?",
+    body: "अपनी पहचान या आवेदन की जानकारी दिए बिना एक विकल्प चुनें।",
+    back: "रास्ते पर वापस जाएं",
+    submitted: "धन्यवाद। यह गुमनाम संकेत दर्ज किया गया है।",
+    options: [
+      { label: "सेवा नहीं मिली", reason: "service_not_found" },
+      { label: "दस्तावेज़ स्पष्ट नहीं थे", reason: "documents_unclear" },
+      { label: "लॉगिन या OTP समस्या", reason: "login_or_otp" },
+      { label: "तकनीकी समस्या", reason: "technical_issue" },
+    ],
+  },
+  en: {
+    title: "Where did you get stuck?",
+    body: "Choose one option without sharing your identity or application details.",
+    back: "Back to the route",
+    submitted: "Thank you. This anonymous signal was recorded.",
+    options: [
+      { label: "Could not find the service", reason: "service_not_found" },
+      { label: "Documents were unclear", reason: "documents_unclear" },
+      { label: "Login or OTP issue", reason: "login_or_otp" },
+      { label: "Technical problem", reason: "technical_issue" },
+    ],
+  },
+};
+
 export default function Prototype() {
   const [language, setLanguage] = useState<Language>("mr");
   const [screen, setScreen] = useState<Screen>("listen");
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [request, setRequest] = useState("");
+  const [frictionSubmitted, setFrictionSubmitted] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState<AnalyticsConsent>(() => getAnalyticsConsent());
   const keyboard = useKeyboard();
   const text = useMemo(() => copy[language], [language]);
@@ -121,6 +206,7 @@ export default function Prototype() {
   const handleAnalyticsChoice = (granted: boolean) => {
     if (granted && enableAnalytics()) {
       setAnalyticsConsent("granted");
+      trackEvent("analytics_consent_granted", { method: "banner" });
       return;
     }
 
@@ -238,7 +324,7 @@ export default function Prototype() {
               <span>{text.privacy}</span>
             </p>
           </section>
-        ) : (
+        ) : screen === "route" ? (
           <section className="route-panel" aria-labelledby="route-title">
             <button className="back-button" type="button" onClick={() => setScreen("listen")}>
               <span aria-hidden="true">←</span> {text.back}
@@ -261,12 +347,30 @@ export default function Prototype() {
               ))}
             </ol>
 
+            <aside className="verification-card" aria-label="Official information check">
+              <strong>{officialCheckCopy[language].title}</strong>
+              <p>{officialCheckCopy[language].body}</p>
+              <a
+                href={OFFICIAL_SERVICE_DIRECTORY_URL}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackEvent("official_source_check_clicked", { service: "income_certificate_maharashtra" })
+                }
+              >
+                {officialCheckCopy[language].link}
+              </a>
+            </aside>
+
             <a
               className="official-link"
-              href="https://aaplesarkar.mahaonline.gov.in/en/CommonForm/CitizenServices_RTS"
+              href={OFFICIAL_SERVICE_DIRECTORY_URL}
               target="_blank"
               rel="noreferrer"
-              onClick={() => trackEvent("official_portal_clicked", { service: "income_certificate_maharashtra" })}
+              onClick={() => {
+                trackEvent("official_portal_clicked", { service: "income_certificate_maharashtra" });
+                setScreen("next");
+              }}
             >
               {text.official} <ChevronRightIcon width="18" height="18" aria-hidden="true" />
             </a>
@@ -274,12 +378,96 @@ export default function Prototype() {
             <button
               className="friction-link"
               type="button"
-              onClick={() => trackEvent("friction_prompt_opened", { language })}
+              onClick={() => {
+                setFrictionSubmitted(false);
+                setScreen("friction");
+                trackEvent("friction_prompt_opened", { language });
+              }}
             >
               {text.stuck} <ChevronRightIcon width="16" height="16" aria-hidden="true" />
             </button>
 
             <p className="route-safety-note">{text.safety}</p>
+          </section>
+        ) : screen === "next" ? (
+          <section className="route-panel next-panel" aria-labelledby="next-title">
+            <button className="back-button" type="button" onClick={() => setScreen("route")}>
+              <span aria-hidden="true">â†</span> {text.back}
+            </button>
+            <div className="eyebrow">SEWAPATH Â· STEP 3 OF 4</div>
+            <h1 id="next-title">{nextCopy[language].title}</h1>
+            <p className="intro-copy">{nextCopy[language].body}</p>
+            <aside className="verification-card" aria-label="Official information check">
+              <strong>{officialCheckCopy[language].title}</strong>
+              <p>{officialCheckCopy[language].body}</p>
+              <a
+                href={OFFICIAL_SERVICE_DIRECTORY_URL}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackEvent("official_source_check_clicked", { service: "income_certificate_maharashtra" })
+                }
+              >
+                {officialCheckCopy[language].link}
+              </a>
+            </aside>
+            <ol className="checklist">
+              {nextCopy[language].checklist.map((item, index) => (
+                <li key={item}>
+                  <span className="step-number">{index + 1}</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ol>
+            <a
+              className="official-link"
+              href={OFFICIAL_SERVICE_DIRECTORY_URL}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => trackEvent("official_portal_reopened", { service: "income_certificate_maharashtra" })}
+            >
+              {nextCopy[language].official} <ChevronRightIcon width="18" height="18" aria-hidden="true" />
+            </a>
+            <button
+              className="text-entry-trigger"
+              type="button"
+              onClick={() => {
+                setRequest("");
+                setScreen("listen");
+                trackEvent("journey_restarted", { language });
+              }}
+            >
+              {nextCopy[language].restart} <ChevronRightIcon width="16" height="16" aria-hidden="true" />
+            </button>
+          </section>
+        ) : (
+          <section className="route-panel friction-panel" aria-labelledby="friction-title">
+            <button className="back-button" type="button" onClick={() => setScreen("route")}>
+              <span aria-hidden="true">â†</span> {frictionCopy[language].back}
+            </button>
+            <div className="eyebrow">SEWAPATH Â· STEP 4 OF 4</div>
+            <h1 id="friction-title">{frictionCopy[language].title}</h1>
+            <p className="intro-copy">{frictionCopy[language].body}</p>
+            {frictionSubmitted ? (
+              <div className="understood-card" role="status">
+                <strong>{frictionCopy[language].submitted}</strong>
+              </div>
+            ) : (
+              <div className="friction-options" role="list">
+                {frictionCopy[language].options.map((option) => (
+                  <button
+                    key={option.reason}
+                    type="button"
+                    onClick={() => {
+                      setFrictionSubmitted(true);
+                      trackEvent("friction_feedback_selected", { language, friction_reason: option.reason });
+                    }}
+                  >
+                    {option.label} <ChevronRightIcon width="16" height="16" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
         )}
 

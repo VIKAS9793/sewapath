@@ -28,13 +28,12 @@ The voice control is a safe prototype interaction: it demonstrates the voice-fir
 
 The product direction is based on desk research into public evidence about digital-service friction, including language preference, confusion, assisted access, tracking, and satisfaction signals. The research plan deliberately excludes restricted grievance text and personal case records.
 
-- [Research plan](RESEARCH_PLAN.md)
-- [Initial evidence](reports/initial-evidence.md)
-- [MVP specification](MVP_SPEC.md)
-- [Data-source boundary](docs/data-sources.md)
-- [Analysis schema](docs/analysis-schema.md)
-- [Cloudflare architecture](docs/cloudflare-architecture.md)
-- [SEO and analytics launch plan](docs/seo-analytics-launch.md)
+- [Public PM documentation](docs/pm/README.md)
+- [Data-source boundary](docs/pm/research/data-sources.md)
+- [Analysis schema](docs/pm/research/analysis-schema.md)
+- [Cloudflare architecture](docs/pm/technical/cloudflare-architecture.md)
+- [SEO and analytics launch plan](docs/pm/growth/seo-analytics-launch.md)
+- [Production product boundary](docs/pm/product/production-product-spec.md)
 
 ## Run locally
 
@@ -103,12 +102,10 @@ public/seo-guide.css    Responsive public guide styling
 public/*/index.html     Crawlable English, Marathi, and Hindi guides
 public/{purpose,privacy,safety,accessibility}
                        Public disclosure pages
-docs/                   Research, architecture, and launch guidance
-reports/                Evidence-backed research outputs
-data/processed/         Reproducible, non-personal research metrics
+docs/pm/                Public product, growth, technical, and research docs
 worker/                 Cloudflare static-site worker shell
 ```
 
 ## License and status
 
-This is an early pilot prototype. Confirm the final license, support contact, privacy notice, and jurisdiction-specific service details before public launch.
+This is the production foundation for the first SewaPath service journey. Confirm the final license, support contact, privacy notice, and jurisdiction-specific service details before public promotion.

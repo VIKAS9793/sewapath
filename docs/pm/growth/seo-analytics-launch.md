@@ -49,7 +49,11 @@ The UI emits only allowlisted, aggregate events through `src/analytics.ts` when 
 | `typed_entry_opened` | `language` | Whether typing remains the preferred fallback |
 | `service_request_submitted` | `language`, `input_method`, `service` | Completion of first-step intake |
 | `official_portal_clicked` | `service` | Handoff intent to the official route |
+| `official_source_check_clicked` | `service` | Whether visitors verify current instructions on the official source |
+| `official_portal_reopened` | `service` | Return to the official route after preparation or handoff |
+| `journey_restarted` | `language` | Whether the guide needs another attempt |
 | `friction_prompt_opened` | `language` | Demand for anonymous friction reporting |
+| `friction_feedback_selected` | `language`, `friction_reason` | Which allowlisted blocker needs product improvement |
 
 Never add request text, names, phone numbers, addresses, document names, exact locations, or accusations to analytics parameters. Analytics is disabled until the build has a configured Measurement ID and the visitor explicitly consents. `src/analytics.ts` loads `gtag.js` dynamically after consent rather than placing a tracking tag in `index.html`.
 
@@ -85,7 +89,7 @@ Guardrails:
 
 - No document uploads.
 - No personal identifiers in analytics or feedback payloads.
-- No public insight shown below the minimum aggregation threshold defined in `MVP_SPEC.md`.
+- No public friction insight is shown until an aggregation threshold is defined and audited.
 - At least one successful official-portal handoff in each supported language before promoting the pilot.
 - Monitor Search Console/Bing impressions and queries, but do not optimize for clicks if the result causes citizens to misunderstand SewaPath’s independent role.
 

@@ -4,3 +4,14 @@ test-results/
 playwright-report/
 .playwright-mcp/
 sewapath-home.png
+
+# Local-only planning, agent context, and research material.
+.openai/
+.agents/
+.playwright-mcp/
+AGENTS.md
+RESEARCH_PLAN.md
+MVP_SPEC.md
+design-qa.md
+data/
+reports/
