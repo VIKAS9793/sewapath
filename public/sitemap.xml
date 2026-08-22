@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Replace the provisional Pages hostname before submitting this sitemap. -->
   <url>
     <loc>https://sewapath.pages.dev/</loc>
+    <lastmod>2026-08-22</lastmod>
+  </url>
+  <url>
+    <loc>https://sewapath.pages.dev/maharashtra-income-certificate-documents/</loc>
+    <lastmod>2026-08-22</lastmod>
+  </url>
+  <url>
+    <loc>https://sewapath.pages.dev/mr/maharashtra-income-certificate-documents/</loc>
+    <lastmod>2026-08-22</lastmod>
+  </url>
+  <url>
+    <loc>https://sewapath.pages.dev/hi/maharashtra-income-certificate-documents/</loc>
     <lastmod>2026-08-22</lastmod>
   </url>
 </urlset>

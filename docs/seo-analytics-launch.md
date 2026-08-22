@@ -20,10 +20,16 @@ The page should answer the searcher’s next decision in under one screen: what 
 - Descriptive title, meta description, robots directives, Open Graph, Twitter card, and theme metadata.
 - `WebApplication` JSON-LD with free access, supported languages, and independent-product disclosure.
 - Crawlable `noscript` fallback with useful service language and the official portal link.
+- Three crawlable preparation guides for English, Marathi, and Hindi intent:
+  - `/maharashtra-income-certificate-documents/`
+  - `/mr/maharashtra-income-certificate-documents/`
+  - `/hi/maharashtra-income-certificate-documents/`
+- Responsive public-site presentation for desktop, tablet, and mobile; the deployed page hides the phone-frame showcase shell.
+- Public disclosure pages for purpose/independence, privacy, safety/non-competence, and accessibility, all linked from the app footer and sitemap.
 - Root `robots.txt` and `sitemap.xml`; the build rewrites them to absolute URLs.
 - Build-time `SEWAPATH_SITE_URL` support so the canonical URL, social image URL, sitemap, and robots sitemap directive follow the real Cloudflare Pages/custom domain.
 - No fake review, FAQ, government, or eligibility structured data. Add only when the page genuinely contains that content.
-- No language `hreflang` tags yet because Marathi, Hindi, and English are currently one client-side screen, not separate crawlable URLs.
+- Each language guide includes reciprocal `hreflang` links; the interactive homepage remains a single multilingual experience.
 
 Run a production build with the real origin:
 
@@ -45,15 +51,16 @@ The UI emits only allowlisted, aggregate events through `src/analytics.ts` when 
 | `official_portal_clicked` | `service` | Handoff intent to the official route |
 | `friction_prompt_opened` | `language` | Demand for anonymous friction reporting |
 
-Never add request text, names, phone numbers, addresses, document names, exact locations, or accusations to analytics parameters. Analytics is disabled unless the host page supplies a configured integration; add a consent control before enabling production measurement.
+Never add request text, names, phone numbers, addresses, document names, exact locations, or accusations to analytics parameters. Analytics is disabled until the build has a configured Measurement ID and the visitor explicitly consents. `src/analytics.ts` loads `gtag.js` dynamically after consent rather than placing a tracking tag in `index.html`.
 
 ## Google Analytics 4 setup
 
 1. Create or select the GA4 web data stream for the final domain.
-2. Add the Google tag only after the product has a privacy/consent decision. Keep measurement IDs in Cloudflare Pages environment variables or a secret-managed deployment step, never in research data or citizen-submitted payloads.
-3. Mark `official_portal_clicked` and `service_request_submitted` as conversions only after baseline data is available.
-4. In DebugView, verify event names and confirm that no free text is sent.
-5. Build an exploration by `language`, `input_method`, and device—not by identity.
+2. In Cloudflare Pages, open `sewapath` → Settings → Environment variables and add `VITE_GA_MEASUREMENT_ID` with the supplied `G-R6V2MX3SLC` value for Production and Preview. Keep the value out of research data and citizen-submitted payloads.
+3. Save the variable and trigger a new deployment. Do not paste the raw Google tag into `index.html`; the app presents a consent choice and loads GA4 only after “Allow analytics”.
+4. Mark `official_portal_clicked` and `service_request_submitted` as conversions only after baseline data is available.
+5. In DebugView, verify event names and confirm that no free text is sent. Google Signals and ad personalization are disabled by the app configuration.
+6. Build an exploration by `language`, `input_method`, and device—not by identity.
 
 ## Search Console setup
 

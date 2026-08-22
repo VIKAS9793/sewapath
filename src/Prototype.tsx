@@ -7,10 +7,17 @@
  * Author: Vikas Sahani
  * Date: August 22, 2026
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronRightIcon, LockClosedIcon, SpeakerLoudIcon } from "@radix-ui/react-icons";
 import { KeyboardInput, MobileScroll, useKeyboard } from "./mobile";
-import { trackEvent } from "./analytics";
+import {
+  disableAnalytics,
+  enableAnalytics,
+  getAnalyticsConsent,
+  isAnalyticsConfigured,
+  trackEvent,
+  type AnalyticsConsent,
+} from "./analytics";
 
 type Language = "mr" | "hi" | "en";
 type Screen = "listen" | "route";
@@ -75,14 +82,51 @@ const copy = {
   },
 } as const;
 
+const analyticsCopy: Record<Language, { prompt: string; detail: string; allow: string; deny: string }> = {
+  mr: {
+    prompt: "SewaPath सुधारण्यासाठी अनामिक वापराची माहिती शेअर करायची का?",
+    detail: "नाव, कागदपत्रे किंवा तुम्ही टाइप केलेले वाक्य पाठवले जात नाही.",
+    allow: "हो, मदत करा",
+    deny: "आत्ता नको",
+  },
+  hi: {
+    prompt: "SewaPath को बेहतर बनाने के लिए गुमनाम उपयोग जानकारी साझा करें?",
+    detail: "नाम, दस्तावेज़ या आपका लिखा हुआ वाक्य नहीं भेजा जाता।",
+    allow: "हां, मदद करें",
+    deny: "अभी नहीं",
+  },
+  en: {
+    prompt: "Share anonymous usage data to help improve SewaPath?",
+    detail: "Names, documents, and what you type are never sent.",
+    allow: "Allow analytics",
+    deny: "Not now",
+  },
+};
+
 export default function Prototype() {
   const [language, setLanguage] = useState<Language>("mr");
   const [screen, setScreen] = useState<Screen>("listen");
   const [isListening, setIsListening] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [request, setRequest] = useState("");
+  const [analyticsConsent, setAnalyticsConsent] = useState<AnalyticsConsent>(() => getAnalyticsConsent());
   const keyboard = useKeyboard();
   const text = useMemo(() => copy[language], [language]);
+  const analyticsConfigured = isAnalyticsConfigured();
+
+  useEffect(() => {
+    if (analyticsConsent === "granted") enableAnalytics();
+  }, [analyticsConsent]);
+
+  const handleAnalyticsChoice = (granted: boolean) => {
+    if (granted && enableAnalytics()) {
+      setAnalyticsConsent("granted");
+      return;
+    }
+
+    disableAnalytics();
+    setAnalyticsConsent("denied");
+  };
 
   const submitRequest = () => {
     if (!request.trim()) return;
@@ -238,6 +282,32 @@ export default function Prototype() {
             <p className="route-safety-note">{text.safety}</p>
           </section>
         )}
+
+        {analyticsConfigured && analyticsConsent === "unknown" && (
+          <aside className="analytics-consent" aria-label="Analytics choice">
+            <strong>{analyticsCopy[language].prompt}</strong>
+            <p>{analyticsCopy[language].detail}</p>
+            <div className="analytics-consent-actions">
+              <button type="button" onClick={() => handleAnalyticsChoice(true)}>
+                {analyticsCopy[language].allow}
+              </button>
+              <button type="button" onClick={() => handleAnalyticsChoice(false)}>
+                {analyticsCopy[language].deny}
+              </button>
+            </div>
+          </aside>
+        )}
+
+        <footer className="site-footer">
+          <p>Independent public-service guide · not a government portal</p>
+          <nav aria-label="SewaPath disclosures">
+            <a href="/purpose/">Purpose</a>
+            <a href="/privacy/">Privacy</a>
+            <a href="/safety/">Safety</a>
+            <a href="/accessibility/">Accessibility</a>
+          </nav>
+          <a href="mailto:vikassahani17@gmail.com">Report a privacy, safety, accessibility, or content concern</a>
+        </footer>
       </main>
     </MobileScroll>
   );

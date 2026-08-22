@@ -70,6 +70,10 @@ npm.cmd run build
 
 ## Cloudflare Pages configuration
 
+**[Open the live SewaPath public portal](https://sewapath.pages.dev)**
+
+Public disclosures: [Purpose](https://sewapath.pages.dev/purpose/), [Privacy](https://sewapath.pages.dev/privacy/), [Safety](https://sewapath.pages.dev/safety/), and [Accessibility](https://sewapath.pages.dev/accessibility/).
+
 For Git-integrated Pages deployment:
 
 | Setting | Value |
@@ -80,12 +84,13 @@ For Git-integrated Pages deployment:
 | Root directory | `/` |
 | Node version | `22` |
 | Environment variable | `SEWAPATH_SITE_URL` |
+| Analytics variable | `VITE_GA_MEASUREMENT_ID` |
 
 Deploy first to the free `*.pages.dev` hostname. Attach a custom domain only after the first deployment is verified.
 
 ## Privacy and safety boundary
 
-The prototype does not upload documents, request an account, or send citizen-entered text to analytics. Product events are allowlisted and contain only aggregate attributes such as language, input method, and service slug. The product must not be extended into public accusations, individual case tracking, or a promise of official action without a new safety and legal review.
+The prototype does not upload documents, request an account, or send citizen-entered text to analytics. Product events are allowlisted and contain only aggregate attributes such as language, input method, and service slug. GA4 loads only after the visitor chooses “Allow analytics”; Google Signals and ad personalization remain disabled. The product must not be extended into public accusations, individual case tracking, or a promise of official action without a new safety and legal review.
 
 ## Project structure
 
@@ -94,6 +99,10 @@ src/Prototype.tsx       Citizen-facing flow
 src/prototype.css       Product-owned visual system
 src/analytics.ts        Privacy-safe optional event bridge
 public/assets/sewapath  Approved product illustrations and logo
+public/seo-guide.css    Responsive public guide styling
+public/*/index.html     Crawlable English, Marathi, and Hindi guides
+public/{purpose,privacy,safety,accessibility}
+                       Public disclosure pages
 docs/                   Research, architecture, and launch guidance
 reports/                Evidence-backed research outputs
 data/processed/         Reproducible, non-personal research metrics
