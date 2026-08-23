@@ -678,6 +678,50 @@
   border-color: rgba(255, 253, 248, 0.6);
 }
 
+/* ══ Satisfaction Widget ═══════════════════════════════════════ */
+.satisfaction-card {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--surface-default);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.satisfaction-question {
+  margin: 0 0 12px 0;
+  font-weight: 500;
+  color: var(--text-default);
+}
+
+.satisfaction-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.satisfaction-btn {
+  padding: 8px 16px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-default);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.satisfaction-btn:active {
+  transform: scale(0.97);
+}
+
+.satisfaction-thanks {
+  margin: 0;
+  font-weight: 500;
+  color: var(--text-subtle);
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Responsive breakpoints
    ═══════════════════════════════════════════════════════════════ */

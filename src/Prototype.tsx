@@ -152,6 +152,11 @@ const COPY: Record<Language, Copy> = {
     nextOfficial: "अधिकृत पोर्टल पुन्हा उघडा",
     nextRestart: "पुन्हा सुरुवात करा",
 
+    satisfactionQuestion: "हे मार्गदर्शक उपयुक्त ठरले का?",
+    satisfactionYes: "होय",
+    satisfactionNo: "नाही",
+    satisfactionThanks: "तुमच्या अभिप्रायाबद्दल धन्यवाद.",
+
     frictionTitle: "कुठे अडचण आली?",
     frictionBody: "खाली एक पर्याय निवडा. तुमची ओळख किंवा अर्जाची माहिती सांगण्याची गरज नाही.",
     frictionBack: "मार्गाकडे परत जा",
@@ -232,6 +237,11 @@ const COPY: Record<Language, Copy> = {
     ],
     nextOfficial: "आधिकारिक पोर्टल फिर खोलें",
     nextRestart: "फिर से शुरू करें",
+
+    satisfactionQuestion: "क्या यह मार्गदर्शक उपयोगी था?",
+    satisfactionYes: "हाँ",
+    satisfactionNo: "नहीं",
+    satisfactionThanks: "आपकी प्रतिक्रिया के लिए धन्यवाद।",
 
     frictionTitle: "कहाँ अटक गए?",
     frictionBody: "नीचे एक विकल्प चुनें। अपनी पहचान या आवेदन की जानकारी देने की ज़रूरत नहीं।",
@@ -314,6 +324,11 @@ const COPY: Record<Language, Copy> = {
     nextOfficial: "Open the official portal again",
     nextRestart: "Start again",
 
+    satisfactionQuestion: "Was this guide helpful?",
+    satisfactionYes: "Yes",
+    satisfactionNo: "No",
+    satisfactionThanks: "Thank you for your feedback.",
+
     frictionTitle: "Where did you get stuck?",
     frictionBody: "Choose one option below. No need to share your identity or application details.",
     frictionBack: "Back to the route",
@@ -358,6 +373,7 @@ export default function SewaPath() {
   const [voiceError, setVoiceError] = useState<VoiceError>(null);
   const [request, setRequest] = useState("");
   const [frictionSubmitted, setFrictionSubmitted] = useState(false);
+  const [satisfactionSubmitted, setSatisfactionSubmitted] = useState(false);
   const [analyticsConsent, setAnalyticsConsent] = useState<AnalyticsConsent>(
     () => getAnalyticsConsent(),
   );
@@ -368,12 +384,31 @@ export default function SewaPath() {
   /* Initialise GA4 baseline on mount; upgrade immediately if previously granted */
   useEffect(() => {
     initAnalytics(analyticsConsent === "granted");
+    trackEvent("journey_started", { language });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update HTML lang attribute dynamically for SEO and accessibility
   useEffect(() => {
     document.documentElement.lang = LANG_ATTR[language];
   }, [language]);
+
+  // Screen time tracking
+  useEffect(() => {
+    const startTime = Date.now();
+    return () => {
+      const durationSeconds = Math.round((Date.now() - startTime) / 1000);
+      if (durationSeconds > 0) {
+        trackEvent("screen_time_spent", { screen, duration_seconds: durationSeconds });
+      }
+    };
+  }, [screen]);
+
+  // Flow completion tracking
+  useEffect(() => {
+    if (screen === "next") {
+      trackEvent("flow_completed", { language });
+    }
+  }, [screen, language]);
 
   const handleConsent = (granted: boolean) => {
     if (granted && enableAnalytics()) {
@@ -729,6 +764,39 @@ export default function SewaPath() {
                 <ChevronRightIcon width={20} height={20} aria-hidden className="cta-arrow" />
               </a>
 
+              {/* Satisfaction Tracking */}
+              <div className="satisfaction-card" aria-live="polite">
+                {satisfactionSubmitted ? (
+                  <p className="satisfaction-thanks">{t.satisfactionThanks}</p>
+                ) : (
+                  <>
+                    <p className="satisfaction-question">{t.satisfactionQuestion}</p>
+                    <div className="satisfaction-buttons">
+                      <button
+                        type="button"
+                        className="satisfaction-btn"
+                        onClick={() => {
+                          setSatisfactionSubmitted(true);
+                          trackEvent("task_satisfaction", { rating: "yes", language });
+                        }}
+                      >
+                        👍 {t.satisfactionYes}
+                      </button>
+                      <button
+                        type="button"
+                        className="satisfaction-btn"
+                        onClick={() => {
+                          setSatisfactionSubmitted(true);
+                          trackEvent("task_satisfaction", { rating: "no", language });
+                        }}
+                      >
+                        👎 {t.satisfactionNo}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+
               <button
                 type="button"
                 className="stuck-btn outline"
@@ -736,6 +804,7 @@ export default function SewaPath() {
                 onClick={() => {
                   setRequest("");
                   setScreen("listen");
+                  setSatisfactionSubmitted(false); // Reset satisfaction on restart
                   trackEvent("journey_restarted", { language });
                 }}
               >
