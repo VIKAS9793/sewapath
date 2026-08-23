@@ -66,10 +66,14 @@ also never claims that a return to SewaPath proves an official outcome.
 
 ## Analytics and data boundary
 
-Analytics is optional and consent-gated. Only allowlisted event names and
-aggregate attributes may be sent. Request text, identity, document names,
-application numbers, exact locations, and accusations are prohibited in
-analytics and feedback payloads.
+Analytics uses GA4 Consent Mode v2. A cookieless baseline (analytics_storage="denied")
+loads on every page visit without requiring consent — no _ga cookie is set and no
+personal data is collected. Google models aggregate journey, funnel, and engagement
+data from these cookieless pings. A precision-tracking upgrade (analytics_storage="granted")
+is offered to visitors via a bottom consent strip; this sets the _ga cookie and sends
+full per-session data. Only allowlisted event names and aggregate attributes may be sent.
+Request text, identity, document names, application numbers, exact locations, and
+accusations are prohibited in all analytics payloads.
 
 ## Production completion gates
 

@@ -1,6 +1,7 @@
 node_modules/
 dist/
 test-results/
+.env
 playwright-report/
 .playwright-mcp/
 sewapath-home.png
