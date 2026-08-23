@@ -370,6 +370,11 @@ export default function SewaPath() {
     initAnalytics(analyticsConsent === "granted");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Update HTML lang attribute dynamically for SEO and accessibility
+  useEffect(() => {
+    document.documentElement.lang = LANG_ATTR[language];
+  }, [language]);
+
   const handleConsent = (granted: boolean) => {
     if (granted && enableAnalytics()) {
       setAnalyticsConsent("granted");
