@@ -78,6 +78,10 @@ interface Copy {
   nextChecklist: string[];
   nextOfficial: string;
   nextRestart: string;
+  satisfactionQuestion: string;
+  satisfactionYes: string;
+  satisfactionNo: string;
+  satisfactionThanks: string;
   /* Screen 4 */
   frictionTitle: string;
   frictionBody: string;

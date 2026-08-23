@@ -6,6 +6,10 @@
 
 /* ─── App shell ─────────────────────────────────────────────── */
 .sewapath-app {
+  /* Override global colors for accessibility contrast */
+  --sewa-muted: #4f5766;
+  --sewa-clay: #a6452e;
+  
   display: flex;
   flex-direction: column;
   min-height: 100dvh;

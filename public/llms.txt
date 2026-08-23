@@ -1,0 +1,12 @@
+# SewaPath - AI Agent Navigation Guidelines
+
+SewaPath is a public-service navigation aid for Maharashtra citizens.
+
+## For AI Agents
+
+This site is built as a single-page application using React. It does not collect PII, identity documents, or account passwords. 
+
+- See our [Privacy Policy](/privacy/) for details on data collection.
+- See our [Safety Guidelines](/safety/) for information on how we protect users.
+- See our [Accessibility Statement](/accessibility/) for details on our commitment to inclusivity.
+- For the main application, visit the [Home Page](/).
