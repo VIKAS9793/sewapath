@@ -815,3 +815,91 @@
     padding: 28px 16px;
   }
 }
+
+/* Static Checklist */
+.checklist-static {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px 0;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--sewa-line);
+  border-radius: 12px;
+  background: var(--sewa-paper);
+}
+
+.check-mark {
+  color: var(--sewa-teal);
+  font-weight: 800;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.check-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.check-name {
+  font-size: 15px;
+  color: var(--sewa-ink);
+  line-height: 1.3;
+}
+
+.check-hint {
+  font-size: 13px;
+  color: var(--sewa-muted);
+  line-height: 1.4;
+}
+
+/* Service Pills */
+.services-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.service-pill {
+  background: #f0ece1;
+  color: var(--sewa-ink);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.service-pill:hover {
+  background: #eaddcc;
+}
+
+/* Brand Logo */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  box-shadow: 0 4px 16px rgba(102, 78, 45, 0.12);
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.brand img {
+  height: 64px;
+  width: auto;
+  object-fit: cover;
+  display: block;
+}

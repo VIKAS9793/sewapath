@@ -20,6 +20,7 @@ import {
   trackEvent,
   type AnalyticsConsent,
 } from "./analytics";
+import { CITIZEN_SERVICES, type CitizenService } from "./data/services";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 type Language = "mr" | "hi" | "en";
@@ -61,10 +62,8 @@ interface Copy {
   privacy: string;
   /* Screen 2 */
   heard: string;
-  routeTitle: string;
-  checklistHeading: string;
-  checklist: string[];
-  checklistHints: string[];
+  fallbackRouteTitle: string;
+  fallbackChecklistHeading: string;
   verifyTitle: string;
   verifyBody: string;
   verifyLink: string;
@@ -128,15 +127,8 @@ const COPY: Record<Language, Copy> = {
     privacy: "तुमची माहिती सुरक्षित आहे. इथे कागदपत्रे अपलोड होत नाहीत.",
 
     heard: "तुम्हाला ही सेवा हवी आहे:",
-    routeTitle: "उत्पन्न प्रमाणपत्रासाठी मार्ग",
-    checklistHeading: "हे कागदपत्रे तयार ठेवा:",
-    checklist: ["ओळखपत्र (Identity Proof)", "पत्ता पुरावा (Address Proof)", "उत्पन्नाचा पुरावा (Income Proof)", "इतर कागदपत्रे"],
-    checklistHints: [
-      "आधार कार्ड, पॅन कार्ड, मतदार ओळखपत्र किंवा पासपोर्ट",
-      "रेशन कार्ड, वीज/पाणी बिल किंवा भाडे पावती",
-      "आयकर रिटर्न (ITR), फॉर्म 16 किंवा तलाठी अहवाल",
-      "स्वयं-घोषणापत्र (Affidavit) आणि फोटो",
-    ],
+    fallbackRouteTitle: "अज्ञात सेवेसाठी मार्ग",
+    fallbackChecklistHeading: "ही कागदपत्रे तयार ठेवा:",
     verifyTitle: "अंतिम माहिती अधिकृत पोर्टलवरच तपासा",
     verifyBody:
       "ही यादी फक्त तयारीसाठी आहे. अंतिम कागदपत्रे, शुल्क, पात्रता आणि वेळमर्यादा अधिकृत सेवायादीवर तपासा.",
@@ -214,15 +206,8 @@ const COPY: Record<Language, Copy> = {
     privacy: "आपकी जानकारी सुरक्षित है। यहाँ दस्तावेज़ अपलोड नहीं होते।",
 
     heard: "हमें समझ आया कि आपको यह सेवा चाहिए:",
-    routeTitle: "आय प्रमाणपत्र का रास्ता",
-    checklistHeading: "ये दस्तावेज़ तैयार रखें:",
-    checklist: ["पहचान पत्र", "पते का प्रमाण", "आय का प्रमाण", "अन्य दस्तावेज़"],
-    checklistHints: [
-      "आधार कार्ड, पैन कार्ड, वोटर आईडी या पासपोर्ट",
-      "राशन कार्ड, बिजली/पानी बिल या किराया रसीद",
-      "इनकम टैक्स रिटर्न (ITR), फॉर्म 16 या तलाठी रिपोर्ट",
-      "स्व-घोषणापत्र (Affidavit) और फोटो",
-    ],
+    fallbackRouteTitle: "अज्ञात सेवा का मार्ग",
+    fallbackChecklistHeading: "ये दस्तावेज़ तैयार रखें:",
     verifyTitle: "अंतिम जानकारी केवल आधिकारिक पोर्टल पर जाँचें",
     verifyBody:
       "यह सूची केवल तैयारी के लिए है। अंतिम दस्तावेज़, शुल्क, पात्रता और समय-सीमा आधिकारिक सेवा सूची पर जाँचें।",
@@ -300,15 +285,8 @@ const COPY: Record<Language, Copy> = {
     privacy: "Your information stays private. No documents are uploaded here.",
 
     heard: "We understood that you need:",
-    routeTitle: "Your income certificate route",
-    checklistHeading: "Keep these documents ready:",
-    checklist: ["Proof of Identity", "Proof of Address", "Income Proof", "Other Documents"],
-    checklistHints: [
-      "Aadhaar, PAN, Voter ID, or Passport",
-      "Ration Card, Electricity/Water Bill, or Rent Receipt",
-      "ITR, Form 16, or Talathi Report",
-      "Self-Declaration (Affidavit) & Photograph",
-    ],
+    fallbackRouteTitle: "Unknown Service Route",
+    fallbackChecklistHeading: "Keep these documents ready:",
     verifyTitle: "Verify the final answer on the official portal",
     verifyBody:
       "This is a preparation aid only. Check the current documents, fees, eligibility, and timeline on the official Maharashtra service list before acting.",
@@ -372,6 +350,7 @@ const COPY: Record<Language, Copy> = {
 /* ─── Component ─────────────────────────────────────────────── */
 export default function SewaPath() {
   const [language, setLanguage] = useState<Language>("mr");
+  const [activeServiceId, setActiveServiceId] = useState<string>("income_certificate");
   const [screen, setScreen] = useState<Screen>("listen");
   const [isListening, setIsListening] = useState(false);
   const [voiceError, setVoiceError] = useState<VoiceError>(null);
@@ -441,6 +420,16 @@ export default function SewaPath() {
     }
   };
 
+  const matchService = (query: string) => {
+    const q = query.toLowerCase();
+    for (const s of CITIZEN_SERVICES) {
+      if (s.keywords.some(k => q.includes(k.toLowerCase()))) {
+        return s.id;
+      }
+    }
+    return "income_certificate";
+  };
+
   const submitRequest = (overrideRequest?: string) => {
     const finalRequest = (overrideRequest ?? request).trim();
     if (!finalRequest) return;
@@ -451,15 +440,22 @@ export default function SewaPath() {
     
     setIsListening(false);
     stopListening();
+    
+    const matchedServiceId = matchService(finalRequest);
+    setActiveServiceId(matchedServiceId);
     setScreen("route");
+    
     trackEvent("service_request_submitted", {
       language,
       input_method: isListening ? "voice" : "typed",
-      service: "income_certificate_maharashtra",
+      service: matchedServiceId,
     });
     
     if (isListening) {
-      speak(`${t.routeTitle}. ${t.checklistHeading} ${t.checklist.join(", ")}`, LANG_ATTR[language]);
+      const sData = CITIZEN_SERVICES.find(s => s.id === matchedServiceId)?.translations[language];
+      if (sData) {
+        speak(`${sData.routeTitle}. ${sData.checklistHeading} ${sData.checklist.join(", ")}`, LANG_ATTR[language]);
+      }
     }
   };
 
@@ -599,6 +595,24 @@ export default function SewaPath() {
                       </p>
                     )}
                   </div>
+                  {/* ── Services Pills ── */}
+                  <div className="services-pills" aria-label="Available Services">
+                    {CITIZEN_SERVICES.map(service => (
+                      <button
+                        key={service.id}
+                        type="button"
+                        className="service-pill"
+                        onClick={() => {
+                          setRequest(service.translations[language].routeTitle);
+                          setActiveServiceId(service.id);
+                          setScreen("route");
+                          trackEvent("service_pill_clicked", { service: service.id });
+                        }}
+                      >
+                        {service.translations[language].routeTitle}
+                      </button>
+                    ))}
+                  </div>
 
                   {/* ── Privacy note ── */}
                   <p className="privacy-note">
@@ -622,7 +636,11 @@ export default function SewaPath() {
         )}
 
         {/* ══ Screen 2: Route ════════════════════════════════ */}
-        {screen === "route" && (
+        {screen === "route" && (() => {
+          const activeService = CITIZEN_SERVICES.find(s => s.id === activeServiceId);
+          const serviceData = activeService?.translations[language];
+          
+          return (
           <section className="screen-route" aria-labelledby="route-h1">
             <div className="route-inner">
 
@@ -635,24 +653,24 @@ export default function SewaPath() {
               </button>
 
               <div className="eyebrow">{t.eyebrow2}</div>
-              <h1 className="screen-h1" id="route-h1">{t.routeTitle}</h1>
+              <h1 className="screen-h1" id="route-h1">{serviceData?.routeTitle || t.fallbackRouteTitle}</h1>
 
               {/* What the user asked for */}
               <div className="understood-card">
                 <span className="uc-label">{t.heard}</span>
-                <strong>{request || t.checklist.join(", ")}</strong>
+                <strong>{request || (serviceData?.checklist.join(", ") || "")}</strong>
               </div>
 
               {/* Preparation checklist — static, not interactive */}
-              <p className="checklist-heading">{t.checklistHeading}</p>
-              <ul className="checklist-static" aria-label={t.checklistHeading}>
-                {t.checklist.map((item, i) => (
+              <p className="checklist-heading">{serviceData?.checklistHeading || t.fallbackChecklistHeading}</p>
+              <ul className="checklist-static" aria-label={serviceData?.checklistHeading || t.fallbackChecklistHeading}>
+                {(serviceData?.checklist || []).map((item, i) => (
                   <li key={item} className="checklist-item">
                     <span className="check-mark" aria-hidden="true">✓</span>
                     <div className="check-content">
                       <strong className="check-name">{item}</strong>
-                      {t.checklistHints[i] && (
-                        <span className="check-hint">{t.checklistHints[i]}</span>
+                      {serviceData?.checklistHints[i] && (
+                        <span className="check-hint">{serviceData?.checklistHints[i]}</span>
                       )}
                     </div>
                   </li>
@@ -669,13 +687,20 @@ export default function SewaPath() {
                   rel="noreferrer"
                   onClick={() =>
                     trackEvent("official_source_check_clicked", {
-                      service: "income_certificate_maharashtra",
+                      service: activeServiceId,
                     })
                   }
                 >
                   {t.verifyLink}
                 </a>
               </aside>
+
+              {serviceData?.citation && (
+                <div className="trust-citation" style={{marginTop: '1.5rem', fontSize: '0.85rem', color: 'var(--sewa-muted)', textAlign: 'center'}}>
+                  <LockClosedIcon style={{marginRight: 4, verticalAlign: 'text-bottom'}} />
+                  {serviceData.citation}
+                </div>
+              )}
 
               {/* Primary CTA — open official portal */}
               <a
@@ -685,7 +710,7 @@ export default function SewaPath() {
                 rel="noreferrer"
                 onClick={() => {
                   trackEvent("official_portal_clicked", {
-                    service: "income_certificate_maharashtra",
+                    service: activeServiceId,
                   });
                   setScreen("next");
                 }}
@@ -711,7 +736,8 @@ export default function SewaPath() {
               <p className="route-safety">{t.safety}</p>
             </div>
           </section>
-        )}
+          );
+        })()}
 
         {/* ══ Screen 3: Next steps ═══════════════════════════ */}
         {screen === "next" && (
@@ -733,7 +759,7 @@ export default function SewaPath() {
                   rel="noreferrer"
                   onClick={() =>
                     trackEvent("official_source_check_clicked", {
-                      service: "income_certificate_maharashtra",
+                      service: activeServiceId,
                     })
                   }
                 >
