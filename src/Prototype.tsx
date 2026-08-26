@@ -70,7 +70,7 @@ interface Copy {
   official: string;
   externalNote: string;
   stuckBtnLabel: string;
-  safety: string;
+  nonGovDisclaimer: string;
   /* Screen 3 */
   nextTitle: string;
   nextBody: string;
@@ -136,7 +136,7 @@ const COPY: Record<Language, Copy> = {
     official: "अधिकृत वेबसाईटवर अर्ज करा",
     externalNote: "बाहेरील सरकारी वेबसाईट उघडते",
     stuckBtnLabel: "अडचण आली? येथे सांगा",
-    safety: "या मार्गदर्शकात फक्त अनामिक अडचणींचे संकेत मोजले जातात.",
+    nonGovDisclaimer: "सेवापाथ हे स्वतंत्र मार्गदर्शक आहे — सरकारी वेबसाईट नाही.",
 
     nextTitle: "अधिकृत पोर्टलनंतर पुढे काय?",
     nextBody: "अर्ज केल्यानंतर ही माहिती जतन करा आणि स्थिती फक्त अधिकृत मार्गावर तपासा.",
@@ -154,7 +154,7 @@ const COPY: Record<Language, Copy> = {
     satisfactionThanks: "तुमच्या अभिप्रायाबद्दल धन्यवाद.",
 
     frictionTitle: "कुठे अडचण आली?",
-    frictionBody: "खाली एक पर्याय निवडा. तुमची ओळख किंवा अर्जाची माहिती सांगण्याची गरज नाही.",
+    frictionBody: "खाली एक पर्याय निवडा. तुमचा अभिप्राय पूर्णपणे निनावी आहे आणि आम्हाला हे मार्गदर्शक सुधारण्यास मदत करतो.",
     frictionBack: "मार्गाकडे परत जा",
     frictionSubmitted: "धन्यवाद. हा अनामिक संकेत नोंदवला गेला.",
     frictionOptions: [
@@ -215,7 +215,7 @@ const COPY: Record<Language, Copy> = {
     official: "आधिकारिक वेबसाइट पर आवेदन करें",
     externalNote: "बाहरी सरकारी वेबसाइट खुलती है",
     stuckBtnLabel: "परेशानी आई? यहाँ बताएं",
-    safety: "इस मार्गदर्शक में केवल गुमनाम अड़चन संकेत गिने जाते हैं।",
+    nonGovDisclaimer: "सेवापाथ एक स्वतंत्र मार्गदर्शक है — सरकारी वेबसाइट नहीं।",
 
     nextTitle: "आधिकारिक पोर्टल के बाद क्या करें?",
     nextBody: "आवेदन के बाद यह जानकारी सुरक्षित रखें और स्थिति केवल आधिकारिक मार्ग पर देखें।",
@@ -233,7 +233,7 @@ const COPY: Record<Language, Copy> = {
     satisfactionThanks: "आपकी प्रतिक्रिया के लिए धन्यवाद।",
 
     frictionTitle: "कहाँ अटक गए?",
-    frictionBody: "नीचे एक विकल्प चुनें। अपनी पहचान या आवेदन की जानकारी देने की ज़रूरत नहीं।",
+    frictionBody: "नीचे एक विकल्प चुनें। आपकी प्रतिक्रिया पूरी तरह से गुमनाम है और इस मार्गदर्शक को बेहतर बनाने में हमारी मदद करती है।",
     frictionBack: "रास्ते पर वापस जाएं",
     frictionSubmitted: "धन्यवाद। यह गुमनाम संकेत दर्ज किया गया है।",
     frictionOptions: [
@@ -294,7 +294,7 @@ const COPY: Record<Language, Copy> = {
     official: "Apply on the official website",
     externalNote: "Opens an external government website",
     stuckBtnLabel: "Faced an issue? Tell us",
-    safety: "This guide only counts anonymous friction signals.",
+    nonGovDisclaimer: "SewaPath is an independent aid — not a government website.",
 
     nextTitle: "What happens after the official portal?",
     nextBody: "Keep your acknowledgement details safe and check progress only through the official route.",
@@ -312,7 +312,7 @@ const COPY: Record<Language, Copy> = {
     satisfactionThanks: "Thank you for your feedback.",
 
     frictionTitle: "Where did you get stuck?",
-    frictionBody: "Choose one option below. No need to share your identity or application details.",
+    frictionBody: "Choose one option below. Your feedback is completely anonymous and helps us improve this guide.",
     frictionBack: "Back to the route",
     frictionSubmitted: "Thank you. This anonymous signal was recorded.",
     frictionOptions: [
@@ -702,6 +702,9 @@ export default function SewaPath() {
                 </div>
               )}
 
+              {/* Non-government disclaimer near CTA */}
+              <p className="non-gov-disclaimer">{t.nonGovDisclaimer}</p>
+
               {/* Primary CTA — open official portal */}
               <a
                 className="official-cta"
@@ -732,8 +735,6 @@ export default function SewaPath() {
               >
                 {t.stuckBtnLabel}
               </button>
-
-              <p className="route-safety">{t.safety}</p>
             </div>
           </section>
           );

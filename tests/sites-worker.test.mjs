@@ -63,9 +63,9 @@ test("does not turn missing API or write requests into the app shell", async () 
 
 test("emits the files required by Sites packaging", async () => {
   await access(new URL("../dist/client/index.html", import.meta.url));
-  await access(new URL("../dist/client/maharashtra-income-certificate-documents/index.html", import.meta.url));
-  await access(new URL("../dist/client/mr/maharashtra-income-certificate-documents/index.html", import.meta.url));
-  await access(new URL("../dist/client/hi/maharashtra-income-certificate-documents/index.html", import.meta.url));
+  await access(new URL("../dist/client/maharashtra-government-services-guide/index.html", import.meta.url));
+  await access(new URL("../dist/client/mr/maharashtra-government-services-guide/index.html", import.meta.url));
+  await access(new URL("../dist/client/hi/maharashtra-government-services-guide/index.html", import.meta.url));
   await access(new URL("../dist/client/purpose/index.html", import.meta.url));
   await access(new URL("../dist/client/privacy/index.html", import.meta.url));
   await access(new URL("../dist/client/safety/index.html", import.meta.url));

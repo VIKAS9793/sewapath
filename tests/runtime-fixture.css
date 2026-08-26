@@ -1,4 +1,4 @@
-.fixture-screen {
+﻿.fixture-screen {
   background: #f6f6f6;
 }
 
@@ -21,6 +21,7 @@
 }
 
 .fixture-carousel-track {
+  display: flex;
   gap: 12px;
 }
 
