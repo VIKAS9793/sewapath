@@ -15,9 +15,9 @@ const siteUrl = (process.env.SEWAPATH_SITE_URL || "https://sewapath.pages.dev").
 const indexPath = path.join(clientRoot, "index.html");
 const contentDate = "2026-08-22";
 const indexablePaths = [
-  "maharashtra-income-certificate-documents/index.html",
-  "mr/maharashtra-income-certificate-documents/index.html",
-  "hi/maharashtra-income-certificate-documents/index.html",
+  "maharashtra-government-services-guide/index.html",
+  "mr/maharashtra-government-services-guide/index.html",
+  "hi/maharashtra-government-services-guide/index.html",
   "purpose/index.html",
   "privacy/index.html",
   "safety/index.html",
